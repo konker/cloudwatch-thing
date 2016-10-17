@@ -96,7 +96,10 @@ class AlarmPoller:
         )
 
         if len(response['AlarmHistoryItems']) == 0:
-            logging.info("No change in state")
+            logging.info("No change in state ({})".format(self.lastState))
+            if self.lastState == 'ALARM':
+                logging.warn('Still in ALARM state')
+                utils.audio.sound_alarm1()
             return
 
         # Check if the alarm has transitioned into an ALARM state
