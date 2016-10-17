@@ -13,6 +13,8 @@ from threading import Thread
 from datetime import datetime
 from datetime import timedelta
 
+import utils.audio
+
 
 class AlarmPoller:
     def __init__(self, alarm_spec):
@@ -105,5 +107,10 @@ class AlarmPoller:
             logging.info("State: {} -> {}".format(oldState, newState))
 
             if newState == 'ALARM':
-                logging.warn('BEEP HERE!!!')
+                logging.warn('ALARM state detected')
+                utils.audio.sound_alarm1()
+
+            # Save the new state for comparison
+            self.lastState = newState
+
 
