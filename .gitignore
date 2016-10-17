@@ -7,3 +7,4 @@ pysmsd/data/pysmsd.db
 *.pyc
 *.log
 logs/*
+etc/*.json
