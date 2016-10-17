@@ -1,0 +1,17 @@
+[Unit]
+Description=Cloudwatch checker and alarm service
+
+[Service]
+Type=simple
+Environment=AWS_PROFILE=maas
+Environment=CLOUDWATCH_THING_HOME=/home/pi/WORKING/cloudwatch-thing
+Environment=CLOUDWATCH_THING_LOG=/home/pi/WORKING/cloudwatch-thing/logs/cloudwatch-thing.log
+Environment=CLOUDWATCH_THING_CONFIG=/home/pi/WORKING/cloudwatch-thing/etc/conf1.json
+WorkingDirectory=/home/pi/WORKING/cloudwatch-thing
+User=pi
+ExecStart=/home/pi/WORKING/cloudwatch-thing/daemon.py --debug --log=${CLOUDWATCH_THING_LOG} --confi=${CLOUDWATCH_THING_CONFIG}
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+
