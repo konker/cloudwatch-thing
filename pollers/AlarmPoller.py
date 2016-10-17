@@ -17,8 +17,11 @@ from datetime import timedelta
 class AlarmPoller:
     def __init__(self, alarm_spec):
         self.alarm_spec = alarm_spec
-        self.alive = True
+        self.alive = False
+        self.interrupt_flag = False
         self.thread = None
+        self.lastState = None
+        self.cloudwatch_client = boto3.client('cloudwatch')
 
 
     def start(self):
@@ -36,13 +39,24 @@ class AlarmPoller:
             self.thread.join(2)
 
 
+    def interrupt(self):
+        if self.alive:
+            self.interrupt_flag = True
+
+
     def _run(self):
+        self.alive = True
         try:
             while self.alive:
                 self.check_alarm()
                 for i in range(self.alarm_spec['pollDelaySecs']):
                     if not self.alive:
                         break
+
+                    if self.interrupt_flag:
+                        self.interrupt_flag = False
+                        break
+
                     time.sleep(1)
 
             # Once we have finished the main loop

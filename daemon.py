@@ -22,6 +22,11 @@ def signal_handler(signal, frame):
     for agent in agents:
         agent.stop()
 
+def usr_signal_handler(signal, frame):
+    print("Interrupt...")
+    for agent in agents:
+        agent.interrupt()
+
 
 def main():
     from optparse import OptionParser
@@ -62,6 +67,7 @@ def main():
     # Set up the signal handlers
     signal.signal(signal.SIGINT, signal_handler)
     signal.signal(signal.SIGTERM, signal_handler)
+    signal.signal(signal.SIGUSR1, usr_signal_handler)
 
 
     # Instantiate an alarm poller for each configured alarm
