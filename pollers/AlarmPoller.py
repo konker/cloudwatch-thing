@@ -47,6 +47,8 @@ class AlarmPoller:
     def _run(self):
         self.alive = True
         try:
+            self.fetch_current_state()
+
             while self.alive:
                 self.check_alarm()
                 for i in range(self.alarm_spec['pollDelaySecs']):
@@ -67,16 +69,33 @@ class AlarmPoller:
             logging.exception(ex)
 
 
-    def check_alarm(self):
-        cloudwatch_client = boto3.client('cloudwatch')
-
+    def fetch_current_state(self):
         # Fetch the alarm state information
-        response = cloudwatch_client.describe_alarm_history(
+        response = self.cloudwatch_client.describe_alarms(
+            AlarmNames=[ self.alarm_spec['name'] ],
+        )
+
+        if len(response['MetricAlarms']) == 0:
+            logging.warn("Could not get current state of alarm")
+
+        self.lastState = response['MetricAlarms'][0]['StateValue']
+        if self.lastState == 'ALARM':
+            logging.warn('ALARM state detected')
+            utils.audio.sound_alarm1()
+
+
+    def check_alarm(self):
+        # Fetch the alarm state information
+        response = self.cloudwatch_client.describe_alarm_history(
             AlarmName=self.alarm_spec['name'],
             HistoryItemType='StateUpdate',
             StartDate=datetime.utcnow() - timedelta(seconds=self.alarm_spec['pollDelaySecs']),
             EndDate=datetime.utcnow()
         )
+
+        if len(response['AlarmHistoryItems']) == 0:
+            logging.info("No change in state")
+            return
 
         # Check if the alarm has transitioned into an ALARM state
         for i in response['AlarmHistoryItems']:
