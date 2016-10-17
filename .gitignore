@@ -6,3 +6,4 @@ pysmsd/data/pysmsd.db
 .DS_Store
 *.pyc
 *.log
+logs/*
