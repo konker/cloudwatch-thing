@@ -1,0 +1,14 @@
+{
+    "alarms": [
+        {
+            "id": "lambda-errors-konrad",
+            "name": "Lambda Errors (konrad)",
+            "pollDelaySecs": 60
+        },
+        {
+            "id": "lambda-errors-konrad2",
+            "name": "Lambda Errors (konrad)",
+            "pollDelaySecs": 20
+        }
+    ]
+}
