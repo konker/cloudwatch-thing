@@ -9,7 +9,7 @@ Environment=CLOUDWATCH_THING_LOG=/home/pi/WORKING/cloudwatch-thing/logs/cloudwat
 Environment=CLOUDWATCH_THING_CONFIG=/home/pi/WORKING/cloudwatch-thing/etc/conf1.json
 WorkingDirectory=/home/pi/WORKING/cloudwatch-thing
 User=pi
-ExecStart=/home/pi/WORKING/cloudwatch-thing/daemon.py --debug --log=${CLOUDWATCH_THING_LOG} --confi=${CLOUDWATCH_THING_CONFIG}
+ExecStart=/home/pi/WORKING/cloudwatch-thing/daemon.py --debug --log=${CLOUDWATCH_THING_LOG} --config=${CLOUDWATCH_THING_CONFIG}
 Restart=on-failure
 
 [Install]
